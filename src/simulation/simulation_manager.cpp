@@ -41,9 +41,10 @@ void SimulationManager::InitializeWorld() {
 }
 
 void SimulationManager::InitializeVehicleModels() {
-  evModels_.push_back(std::make_shared<vehicles::EVModel>("Tesla Model 3", 60.0, 142, 45545)); // 60kWh, 142 Wh/km
-  evModels_.push_back(std::make_shared<vehicles::EVModel>("Kia Niro", 68.0, 168, 23105));
+  // EVs should to be ordered according to their distribution, from lowest to highest
   evModels_.push_back(std::make_shared<vehicles::EVModel>("VW ID.3", 62.0, 166, 19950));
+  evModels_.push_back(std::make_shared<vehicles::EVModel>("Kia Niro", 68.0, 168, 23105));
+  evModels_.push_back(std::make_shared<vehicles::EVModel>("Tesla Model 3", 60.0, 142, 45545)); // 60kWh, 142 Wh/km
 }
 
 void SimulationManager::InitializeVehicles() {
@@ -103,10 +104,17 @@ void SimulationManager::PrintInitializationSummary() {
   }
   std::cout << "Number of EV Models: " << evModels_.size() << "\n";
   for (const auto& model : evModels_) {
+    int count = 0;
+    for (const auto& ev : evs_) {
+      if (ev->GetModel().GetName() == model->GetName()) {
+        count++;
+      }
+    }
     std::cout << "  - Model Name: " << model->GetName() 
               << ", Battery Capacity: " << model->GetBatteryCapacity_kWh() << " kWh"
               << ", Usage: " << model->GetUsage_Wh_km() << " Wh/km"
-              << ", Distribution: " << model->GetDistribution() << "\n";
+              << ", Distribution: " << model->GetDistribution()
+              << ",  In simulation: " << count << " EVs\n";
   }
   std::cout << "Total EVs Initialized: " << evs_.size() << "\n";
 }
