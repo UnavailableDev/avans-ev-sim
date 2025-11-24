@@ -22,6 +22,7 @@ void SimulationManager::InitializeWorld() {
   highway_.get()->SetLength(40.0);
   highway_.get()->SetSpeedLimit(100.0);
 
+  // TODO: Add station directionality information
   auto station1 = std::make_shared<world::ChargingStation>("Station Lingehorst", 30.0);
   auto station2 = std::make_shared<world::ChargingStation>("Station Bisde", 12.0);
   highway_.get()->AddStation(station1);
@@ -82,12 +83,32 @@ void SimulationManager::InitializeVehicles() {
       // ev->position_km_ = static_cast<double>(rand()) / RAND_MAX * highwayLength;
       evs_.push_back(ev);
     }
-    
   }
-  
-
-
 }
-void SimulationManager::PrintInitializationSummary() {}
+
+void SimulationManager::PrintInitializationSummary() {
+  std::cout << "Simulation Initialization Summary:\n";
+  std::cout << "Highway Length: " << highway_->GetLength() << " km\n";
+  std::cout << "Speed Limit: " << highway_->GetSpeedLimit() << " km/h\n";
+  std::cout << "Number of Charging Stations: " << highway_->GetStations().size() << "\n";
+  for (const auto& station : highway_->GetStations()) {
+    std::cout << "  - Station Name: " << station->GetName() 
+              << ", Position: " << station->GetPosition() << " km\n";
+  }
+  std::cout << "Number of Traffic Flows: " << highway_->GetTrafficFlows().size() << "\n";
+  for (const auto& flow : highway_->GetTrafficFlows()) {
+    std::cout << "  - Flow Direction: " 
+              << (flow->GetDirection() == world::Direction::NORTH_TO_SOUTH ? "North to South" : "South to North")
+              << ", Vehicles per Hour: " << flow->GetVehiclesPerHour() << "\n";
+  }
+  std::cout << "Number of EV Models: " << evModels_.size() << "\n";
+  for (const auto& model : evModels_) {
+    std::cout << "  - Model Name: " << model->GetName() 
+              << ", Battery Capacity: " << model->GetBatteryCapacity_kWh() << " kWh"
+              << ", Usage: " << model->GetUsage_Wh_km() << " Wh/km"
+              << ", Distribution: " << model->GetDistribution() << "\n";
+  }
+  std::cout << "Total EVs Initialized: " << evs_.size() << "\n";
+}
 
 }  // namespace simulation
