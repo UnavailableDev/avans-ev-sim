@@ -22,7 +22,6 @@ class EVModel : public VehicleModel {
   int GetDistribution() const { return distribution_; }
 
  private:
-  std::string name_;
   int distribution_;
   double batteryCapacity_kWh_;
   double usage_Wh_km_;
