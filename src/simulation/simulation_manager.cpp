@@ -77,7 +77,7 @@ void SimulationManager::InitializeVehicles() {
     }
 
     if (selectedModel) {
-      double soc = static_cast<double>(rand()/RAND_MAX);
+      double soc = ((double)rand()/ (double)RAND_MAX);
       auto ev = std::make_shared<vehicles::EV>(i, *selectedModel.get(), 0.0, soc);
 
       // TODO: Randomize start position along the highway
@@ -117,6 +117,11 @@ void SimulationManager::PrintInitializationSummary() {
               << ",  In simulation: " << count << " EVs\n";
   }
   std::cout << "Total EVs Initialized: " << evs_.size() << "\n";
+  for (const auto& ev : evs_) {
+    std::cout << "  - EV ID: " << ev->GetID() 
+              << ", Model: " << ev->GetModel().GetName() 
+              << ", Initial SOC: " << ev->GetStateOfCharge() * 100 << "%\n";
+  }
 }
 
 }  // namespace simulation

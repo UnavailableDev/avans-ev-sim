@@ -13,12 +13,12 @@ class EV : public Vehicle, public simulation::SimulationActor {
  public:
   // explicit EV(EVModel model);
   EV(int id, const EVModel& model, double start_position_km, double soc)
-      : model_(model), soc_(1.0) {
+      : id_(id), model_(model), soc_(soc) {
     position_km_ = start_position_km;
   }
   ~EV() override = default;
 
-  int GetID() const { return id; }
+  int GetID() const { return id_; }
   const EVModel& GetModel() const { return model_; }
   double GetStateOfCharge() const { return soc_; }
 
@@ -27,7 +27,7 @@ class EV : public Vehicle, public simulation::SimulationActor {
   void Move() override;
 
  private:
-  int id;
+  int id_;
   EVModel model_;
   double soc_{1.0}; // state of charge 0.0 - 1.0
   // std::atomic<bool> active_{false};
