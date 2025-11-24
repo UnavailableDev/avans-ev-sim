@@ -13,7 +13,9 @@ namespace simulation {
 class SimulationManager {
  public:
   SimulationManager(const double ev_percentage = 0.05) 
-  : evPercentage_(ev_percentage) {}
+  : evPercentage_(ev_percentage) {
+    highway_ = std::make_unique<world::Highway>();
+  }
   ~SimulationManager() = default;
 
   void StartSimulation();
