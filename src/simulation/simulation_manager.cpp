@@ -19,20 +19,20 @@ void SimulationManager::StartSimulation() {
 void SimulationManager::StopSimulation() {}
 
 void SimulationManager::InitializeWorld() {
-  highway_.get()->SetLength(40.0);
-  highway_.get()->SetSpeedLimit(100.0);
+  highway_->SetLength(40.0);
+  highway_->SetSpeedLimit(100.0);
 
   // TODO: Add station directionality information
   auto station1 = std::make_shared<world::ChargingStation>("Station Lingehorst", 30.0);
   auto station2 = std::make_shared<world::ChargingStation>("Station Bisde", 12.0);
-  highway_.get()->AddStation(station1);
-  highway_.get()->AddStation(station2);
+  highway_->AddStation(station1);
+  highway_->AddStation(station2);
   
 
   auto flow1 = std::make_shared<world::TrafficFlow>(world::Direction::SOUTH_TO_NORTH, 3688);
   auto flow2 = std::make_shared<world::TrafficFlow>(world::Direction::NORTH_TO_SOUTH, 4321);
-  highway_.get()->AddTrafficFlow(flow1);
-  highway_.get()->AddTrafficFlow(flow2);
+  highway_->AddTrafficFlow(flow1);
+  highway_->AddTrafficFlow(flow2);
 
   InitializeVehicleModels();
   InitializeVehicles();
@@ -56,11 +56,11 @@ void SimulationManager::InitializeVehicles() {
   int totalEVs = static_cast<int>(totalExpectedVehicles * evPercentage_);
   int totalDistributionEVs = 0;
   for (const auto& model : evModels_) {
-    totalDistributionEVs += model.get()->GetDistribution();
+    totalDistributionEVs += model->GetDistribution();
   }
 
   evs_.reserve(totalEVs);
-  double highwayLength = highway_.get()->GetLength();
+  double highwayLength = highway_->GetLength();
 
   for (int i = 0; i < totalEVs; i++) {
     // Select EV model based on distribution
@@ -69,7 +69,7 @@ void SimulationManager::InitializeVehicles() {
     std::shared_ptr<vehicles::EVModel> selectedModel = nullptr;
     
     for (const auto& model : evModels_) { // Find the model corresponding to the random selected value
-      cumulativeDistribution += model.get()->GetDistribution();
+      cumulativeDistribution += model->GetDistribution();
       if (randValue < cumulativeDistribution) {
         selectedModel = model;
         break;
@@ -117,11 +117,11 @@ void SimulationManager::PrintInitializationSummary() {
               << ",  In simulation: " << count << " EVs\n";
   }
   std::cout << "Total EVs Initialized: " << evs_.size() << "\n";
-  for (const auto& ev : evs_) {
-    std::cout << "  - EV ID: " << ev->GetID() 
-              << ", Model: " << ev->GetModel().GetName() 
-              << ", Initial SOC: " << ev->GetStateOfCharge() * 100 << "%\n";
-  }
+  // for (const auto& ev : evs_) {
+  //   std::cout << "  - EV ID: " << ev->GetID() 
+  //             << ", Model: " << ev->GetModel().GetName() 
+  //             << ", Initial SOC: " << ev->GetStateOfCharge() * 100 << "%\n";
+  // }
 }
 
 }  // namespace simulation
