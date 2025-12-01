@@ -22,22 +22,19 @@ void SimulationManager::InitializeWorld() {
   highway_->SetLength(40.0);
   highway_->SetSpeedLimit(100.0);
 
-  // TODO: Add station directionality information
+  auto flowSN = std::make_shared<world::TrafficFlow>(world::Direction::SOUTH_TO_NORTH, 3688);
+  auto flowNS = std::make_shared<world::TrafficFlow>(world::Direction::NORTH_TO_SOUTH, 4321);
   auto station1 = std::make_shared<world::ChargingStation>("Station Lingehorst", 30.0);
   auto station2 = std::make_shared<world::ChargingStation>("Station Bisde", 12.0);
-  highway_->AddStation(station1);
-  highway_->AddStation(station2);
-  
-
-  auto flow1 = std::make_shared<world::TrafficFlow>(world::Direction::SOUTH_TO_NORTH, 3688);
-  auto flow2 = std::make_shared<world::TrafficFlow>(world::Direction::NORTH_TO_SOUTH, 4321);
-  highway_->AddTrafficFlow(flow1);
-  highway_->AddTrafficFlow(flow2);
+  flowSN->AddStation(station1);
+  flowNS->AddStation(station2);
+  highway_->AddTrafficFlow(flowSN);
+  highway_->AddTrafficFlow(flowNS);
 
   InitializeVehicleModels();
   InitializeVehicles();
 
-#if 0
+#if 1
   PrintInitializationSummary();
 #endif
 }
@@ -93,16 +90,20 @@ void SimulationManager::PrintInitializationSummary() {
   std::cout << "Simulation Initialization Summary:\n";
   std::cout << "Highway Length: " << highway_->GetLength() << " km\n";
   std::cout << "Speed Limit: " << highway_->GetSpeedLimit() << " km/h\n";
-  std::cout << "Number of Charging Stations: " << highway_->GetStations().size() << "\n";
-  for (const auto& station : highway_->GetStations()) {
-    std::cout << "  - Station Name: " << station->GetName() 
-              << ", Position: " << station->GetPosition() << " km\n";
-  }
+  // std::cout << "Number of Charging Stations: " << highway_->GetTrafficFlows() GetStations().size() << "\n";
+  // for (const auto& station : highway_->GetStations()) {
+  //   std::cout << "  - Station Name: " << station->GetName() 
+  //             << ", Position: " << station->GetPosition() << " km\n";
+  // }
   std::cout << "Number of Traffic Flows: " << highway_->GetTrafficFlows().size() << "\n";
   for (const auto& flow : highway_->GetTrafficFlows()) {
     std::cout << "  - Flow Direction: " 
               << (flow->GetDirection() == world::Direction::NORTH_TO_SOUTH ? "North to South" : "South to North")
               << ", Vehicles per Hour: " << flow->GetVehiclesPerHour() << "\n";
+    for (const auto& station : flow->GetStations()) {
+      std::cout << "  - Station Name: " << station->GetName()
+                << ", Position: " << station->GetPosition() << " km\n";
+    }
   }
   std::cout << "Number of EV Models: " << evModels_.size() << "\n";
   for (const auto& model : evModels_) {

@@ -21,8 +21,6 @@ class Highway {
   double GetLength() const { return length_km_; }
   double GetSpeedLimit() const { return speed_kmh_; }
 
-  void AddStation(std::shared_ptr<Station> station);
-  const std::vector<std::shared_ptr<Station>>& GetStations() const;
   void AddTrafficFlow(std::shared_ptr<TrafficFlow> flow);
   const std::vector<std::shared_ptr<TrafficFlow>>& GetTrafficFlows() const;
  
@@ -30,7 +28,6 @@ class Highway {
   double length_km_{0};
   double speed_kmh_{0};
 
-  std::vector<std::shared_ptr<Station>> stations_;
   std::vector<std::shared_ptr<TrafficFlow>> flows_;
 };
 
