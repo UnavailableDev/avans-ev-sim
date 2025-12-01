@@ -37,7 +37,9 @@ void SimulationManager::InitializeWorld() {
   InitializeVehicleModels();
   InitializeVehicles();
 
+#if 0
   PrintInitializationSummary();
+#endif
 }
 
 void SimulationManager::InitializeVehicleModels() {
