@@ -11,6 +11,7 @@ class SimulationActor {
 
   void Start();
   void Stop();
+  bool IsRunning() const { return running_; }
 
  protected:
   virtual void Run() = 0;
