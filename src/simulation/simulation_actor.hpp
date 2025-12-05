@@ -7,7 +7,8 @@ namespace simulation {
 
 class SimulationActor {
  public:
-  virtual ~SimulationActor() = default;
+  SimulationActor();
+  virtual ~SimulationActor();
 
   void Start();
   void Stop();

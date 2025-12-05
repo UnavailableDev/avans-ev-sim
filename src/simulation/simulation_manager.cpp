@@ -76,8 +76,7 @@ void SimulationManager::InitializeVehicles() {
     }
 
     if (selectedModel) {
-      double soc = ((double)rand()/ (double)RAND_MAX);
-      auto ev = std::make_shared<vehicles::EV>(i, *selectedModel.get(), 0.0, soc);
+      auto ev = std::make_shared<vehicles::EV>(i, *selectedModel.get());
 
       // TODO: Randomize start position along the highway
       // ev->position_km_ = static_cast<double>(rand()) / RAND_MAX * highwayLength;

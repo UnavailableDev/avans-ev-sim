@@ -7,12 +7,19 @@
 // #include <atomic>
 #include <memory>
 
+#define MIN_INITIAL_SOC 0.1
+
 namespace vehicles {
 
 class EV : public Vehicle, public simulation::SimulationActor {
+ private:
+  static double RandomSOC(){
+    return (static_cast<double>(rand())/ static_cast<double>(RAND_MAX))
+           * (1.0-MIN_INITIAL_SOC) + MIN_INITIAL_SOC;
+  };
  public:
   // explicit EV(EVModel model);
-  EV(int id, const EVModel& model, double start_position_km, double soc)
+  EV(int id, const EVModel& model, double start_position_km = 0.0, double soc = RandomSOC())
       : id_(id), model_(model), soc_(soc) {
     position_km_ = start_position_km;
   }
