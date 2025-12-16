@@ -1,8 +1,10 @@
 #pragma once
 
+#include "simulation/simulation_actor.hpp"
+
 namespace vehicles {
 
-class Vehicle {
+class Vehicle : public simulation::SimulationActor {
  public:
   virtual ~Vehicle() = default;
   virtual void Move() = 0;
