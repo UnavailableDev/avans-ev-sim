@@ -7,12 +7,11 @@ namespace vehicles {
 void EV::Run() {
 }
 
-void EV::Move() {
+void EV::Move(int distance_km) {
   // Placeholder movement
-  const double stepDistance_km = 0.1;
-  position_km_ += stepDistance_km;
+  position_km_ += distance_km;
   // Decrease state of charge based on model usage
-  double usage = model_.GetUsage_Wh_km() * stepDistance_km; // Wh used for x km
+  double usage = model_.GetUsage_Wh_km() * distance_km; // Wh used for x km
   double batteryCapacity_Wh = model_.GetBatteryCapacity_kWh() * 1000; // convert kWh to Wh
   soc_ -= usage / batteryCapacity_Wh;
   if (soc_ < 0) {

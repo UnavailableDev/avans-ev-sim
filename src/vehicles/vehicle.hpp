@@ -7,7 +7,7 @@ namespace vehicles {
 class Vehicle : public simulation::SimulationActor {
  public:
   virtual ~Vehicle() = default;
-  virtual void Move() = 0;
+  virtual void Move(int distance_km) = 0;
 
  protected:
   double position_km_{0};
