@@ -1,6 +1,7 @@
 #pragma once
 
 #include "simulation/simulation_actor.hpp"
+#include "vehicles/vehicle.hpp"
 
 #include <vector>
 #include <memory>
@@ -23,6 +24,9 @@ class TrafficFlow : public simulation::SimulationActor {
   void AddStation(std::shared_ptr<Station> station);
   const std::vector<std::shared_ptr<Station>>& GetStations() const;
 
+  void AddVehicle(vehicles::Vehicle v) { vehicles_.push_back(v); }
+  const std::vector<vehicles::Vehicle>& GetVehicles() const { return vehicles_; }
+
   Direction GetDirection() const { return direction_; }
   int GetVehiclesPerHour() const { return vehiclesPerHour_; }
 
@@ -33,6 +37,7 @@ class TrafficFlow : public simulation::SimulationActor {
   Direction direction_;
   int vehiclesPerHour_;
   std::vector<std::shared_ptr<Station>> stations_;
+  std::vector<vehicles::Vehicle> vehicles_;
 };
 
 }  // namespace world
