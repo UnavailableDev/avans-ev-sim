@@ -4,8 +4,6 @@
 
 namespace vehicles {
 
-void EV::Run() {
-}
 
 void EV::Move(int distance_km) {
   // Placeholder movement

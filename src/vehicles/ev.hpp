@@ -11,7 +11,7 @@
 
 namespace vehicles {
 
-class EV : public Vehicle, public simulation::SimulationActor {
+class EV : public Vehicle {
  private:
   static double RandomSOC(){
     return (static_cast<double>(rand())/ static_cast<double>(RAND_MAX))
@@ -28,11 +28,8 @@ class EV : public Vehicle, public simulation::SimulationActor {
   int GetID() const { return id_; }
   const EVModel& GetModel() const { return model_; }
   double GetStateOfCharge() const { return soc_; }
-
  protected:
-  void Run() override;
-  void Move() override;
-
+  void Move(int distance_km) override;
  private:
   int id_;
   EVModel model_;

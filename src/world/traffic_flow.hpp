@@ -27,7 +27,7 @@ class TrafficFlow : public simulation::SimulationActor {
   int GetVehiclesPerHour() const { return vehiclesPerHour_; }
 
  protected:
-  void Run() override;
+  void Act() override;
 
  private:
   Direction direction_;

@@ -10,6 +10,9 @@ class Vehicle : public simulation::SimulationActor {
   virtual void Move(int distance_km) = 0;
 
  protected:
+  void Act() override;
+
+ protected:
   double position_km_{0};
   // double destination_km_{0};
 };

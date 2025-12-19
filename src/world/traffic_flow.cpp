@@ -9,7 +9,7 @@ const std::vector<std::shared_ptr<Station>>& TrafficFlow::GetStations() const {
   return stations_;
 }
 
-void TrafficFlow::Run() {
+void TrafficFlow::Act() {
   // Placeholder simulation loop
 }
 

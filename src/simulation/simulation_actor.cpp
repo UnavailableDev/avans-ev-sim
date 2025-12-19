@@ -15,7 +15,7 @@ void SimulationActor::Start() {
   running_ = true;
 
   thread_ = std::thread([this]() {
-    Run();
+    Act();
     running_ = false;
   });
 }

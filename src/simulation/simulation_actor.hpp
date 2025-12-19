@@ -10,12 +10,12 @@ class SimulationActor {
   SimulationActor();
   virtual ~SimulationActor();
 
-  void Start();
-  void Stop();
+  void Start(); // start the actor's thread
+  void Stop();  // stop the actor's thread
   bool IsRunning() const { return running_; }
 
  protected:
-  virtual void Run() = 0;
+  virtual void Act() = 0; // main loop of the actor
 
  private:
   std::thread thread_;
