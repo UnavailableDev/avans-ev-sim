@@ -14,7 +14,7 @@ class Vehicle : public simulation::SimulationActor {
 
  protected:
   double position_km_{0};
-  // double destination_km_{0};
+  double destination_km_{0};
 };
 
 }  // namespace vehicles

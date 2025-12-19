@@ -27,7 +27,13 @@ void SimulationActor::Stop() {
   running_ = false;
   
   if (thread_.joinable()) {
-    thread_.join();
+    // If Stop() is called from the actor's own thread, don't try to join
+    // (joining self causes std::system_error: Resource deadlock avoided).
+    if (std::this_thread::get_id() == thread_.get_id()) {
+      thread_.detach();
+    } else {
+      thread_.join();
+    }
   }
 }
 

@@ -14,6 +14,11 @@ namespace simulation {
 
 void SimulationManager::StartSimulation() {
   InitializeWorld();
+  for (const auto& flow : highway_->GetTrafficFlows()) {
+    if (flow) {
+      flow->Start();
+    }
+  }
 }
 
 void SimulationManager::StopSimulation() {}
@@ -47,40 +52,59 @@ void SimulationManager::InitializeVehicleModels() {
 }
 
 void SimulationManager::InitializeVehicles() {
-  int totalExpectedVehicles = 0;
-  for (const auto& flow : highway_->GetTrafficFlows()) {
-    totalExpectedVehicles += static_cast<int>(flow->GetVehiclesPerHour() * (simulationDurationMinutes_ / 60.0));
-  }
-
-  int totalEVs = static_cast<int>(totalExpectedVehicles * evPercentage_);
+  /// Distribute EVs into each TrafficFlow based on that flow's vehicles-per-hour.
+  // First compute the per-flow expected vehicle counts and reserve storage.
   int totalDistributionEVs = 0;
   for (const auto& model : evModels_) {
     totalDistributionEVs += model->GetDistribution();
   }
 
-  evs_.reserve(totalEVs);
   double highwayLength = highway_->GetLength();
 
-  for (int i = 0; i < totalEVs; i++) {
-    // Select EV model based on distribution
-    int randValue = rand() % totalDistributionEVs;
-    int cumulativeDistribution = 0;
-    std::shared_ptr<vehicles::EVModel> selectedModel = nullptr;
-    
-    for (const auto& model : evModels_) { // Find the model corresponding to the random selected value
-      cumulativeDistribution += model->GetDistribution();
-      if (randValue < cumulativeDistribution) {
-        selectedModel = model;
-        break;
+  // Compute per-flow EV counts and total to reserve
+  std::vector<int> evs_per_flow;
+  evs_per_flow.reserve(highway_->GetTrafficFlows().size());
+  int totalEVs = 0;
+  for (const auto& flow : highway_->GetTrafficFlows()) {
+    double expectedVehicles = flow->GetVehiclesPerHour() * (simulationDurationMinutes_ / 60.0);
+    int evCount = static_cast<int>(expectedVehicles * evPercentage_);
+    evs_per_flow.push_back(evCount);
+    totalEVs += evCount;
+  }
+
+  evs_.reserve(totalEVs);
+
+  // Create EVs and place them into their flows
+  int id_counter = 0;
+  auto flows = highway_->GetTrafficFlows();
+  for (std::size_t f = 0; f < flows.size(); ++f) {
+    auto& flow = flows[f];
+    int n = evs_per_flow[f];
+    for (int j = 0; j < n; ++j) {
+      // Select EV model based on distribution
+      int randValue = rand() % totalDistributionEVs;
+      int cumulativeDistribution = 0;
+      std::shared_ptr<vehicles::EVModel> selectedModel = nullptr;
+
+      for (const auto& model : evModels_) {
+        cumulativeDistribution += model->GetDistribution();
+        if (randValue < cumulativeDistribution) {
+          selectedModel = model;
+          break;
+        }
       }
-    }
 
-    if (selectedModel) {
-      auto ev = std::make_shared<vehicles::EV>(i, *selectedModel.get());
+      if (selectedModel) {
+        auto ev = std::make_shared<vehicles::EV>(id_counter++, *selectedModel.get());
 
-      // TODO: Randomize start position along the highway
-      // ev->position_km_ = static_cast<double>(rand()) / RAND_MAX * highwayLength;
-      evs_.push_back(ev);
+        // TODO: Randomize start position along the highway
+        // ev->position_km_ = static_cast<double>(rand()) / RAND_MAX * highwayLength;
+
+        evs_.push_back(ev);
+        if (flow) {
+          flow->AddVehicle(ev);
+        }
+      }
     }
   }
 }

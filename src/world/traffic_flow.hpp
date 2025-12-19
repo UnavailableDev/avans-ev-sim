@@ -24,8 +24,8 @@ class TrafficFlow : public simulation::SimulationActor {
   void AddStation(std::shared_ptr<Station> station);
   const std::vector<std::shared_ptr<Station>>& GetStations() const;
 
-  void AddVehicle(vehicles::Vehicle v) { vehicles_.push_back(v); }
-  const std::vector<vehicles::Vehicle>& GetVehicles() const { return vehicles_; }
+  void AddVehicle(std::shared_ptr<vehicles::Vehicle> v);
+  const std::vector<std::shared_ptr<vehicles::Vehicle>>& GetVehicles() const;
 
   Direction GetDirection() const { return direction_; }
   int GetVehiclesPerHour() const { return vehiclesPerHour_; }
@@ -37,7 +37,7 @@ class TrafficFlow : public simulation::SimulationActor {
   Direction direction_;
   int vehiclesPerHour_;
   std::vector<std::shared_ptr<Station>> stations_;
-  std::vector<vehicles::Vehicle> vehicles_;
+  std::vector<std::shared_ptr<vehicles::Vehicle>> vehicles_;
 };
 
 }  // namespace world
