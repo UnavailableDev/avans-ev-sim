@@ -20,18 +20,17 @@ class EV : public Vehicle {
  public:
   // explicit EV(EVModel model);
   EV(int id, const EVModel& model, double start_position_km = 0.0, double soc = RandomSOC())
-      : id_(id), model_(model), soc_(soc) {
+      : model_(model), soc_(soc) {
+    id_ = id;
     position_km_ = start_position_km;
   }
   ~EV() override = default;
 
-  int GetID() const { return id_; }
   const EVModel& GetModel() const { return model_; }
   double GetStateOfCharge() const { return soc_; }
  protected:
   void Move(int distance_km) override;
  private:
-  int id_;
   EVModel model_;
   double soc_{1.0}; // state of charge 0.0 - 1.0
   // std::atomic<bool> active_{false};
