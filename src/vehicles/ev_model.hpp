@@ -22,9 +22,9 @@ class EVModel : public VehicleModel {
   int GetDistribution() const { return distribution_; }
 
  private:
-  int distribution_;
   double batteryCapacity_kWh_;
   double usage_Wh_km_;
+  int distribution_;
 };
 
 }  // namespace vehicles
