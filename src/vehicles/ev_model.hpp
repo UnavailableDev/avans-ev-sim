@@ -10,10 +10,10 @@ class EVModel : public VehicleModel {
  public:
   EVModel();
   EVModel(const std::string& name, double battery_capacity_kwh, double usage_Wh_per_km, int distribution)
-      : batteryCapacity_kWh_(battery_capacity_kwh),
+      : VehicleModel(name),
+        batteryCapacity_kWh_(battery_capacity_kwh),
         usage_Wh_km_(usage_Wh_per_km),
         distribution_(distribution) {
-    name_ = name;
   }
   // ~EVModel() override = default;
 
