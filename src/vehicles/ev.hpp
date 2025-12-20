@@ -26,8 +26,10 @@ class EV : public Vehicle {
 
   const EVModel& GetModel() const { return model_; }
   double GetStateOfCharge() const { return soc_; }
- protected:
+
+//  protected:
   void Move(int distance_km) override;
+
  private:
   EVModel model_;
   double soc_{1.0}; // state of charge 0.0 - 1.0

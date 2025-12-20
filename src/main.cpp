@@ -3,6 +3,8 @@
 
 #include "vehicles/ev.hpp"
 
+#include "manager.hpp"
+
 int main() {
   while (1) {
 
@@ -22,6 +24,11 @@ int main() {
     input.clear();
 
     /// TODO: Start Simulation
+    InitializeManager();
+    StepSimulation();
+    StepSimulation();
+    StepSimulation();
+    StepSimulation();
 
     std::cout << "re-run? y/N: ";
     std::getline(std::cin, input);
