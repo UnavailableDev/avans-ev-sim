@@ -20,9 +20,7 @@ class EV : public Vehicle {
  public:
   // explicit EV(EVModel model);
   EV(int id, const EVModel& model, double start_position_km = 0.0, double soc = RandomSOC())
-      : model_(model), soc_(soc) {
-    id_ = id;
-    position_km_ = start_position_km;
+      : Vehicle(id, start_position_km), model_(model), soc_(soc) {
   }
   ~EV() override = default;
 
