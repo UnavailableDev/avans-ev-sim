@@ -29,6 +29,10 @@ SRC := \
 	src/main.cpp \
 	src/manager.cpp \
 	src/simulation/simulation_manager.cpp \
+	src/world/highway.cpp \
+	src/world/traffic_flow.cpp \
+	src/world/station.cpp \
+	src/world/charging_station.cpp \
 	src/vehicles/vehicle.cpp \
 	src/vehicles/ev.cpp \
 	src/vehicles/vehicle_model.cpp \

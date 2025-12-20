@@ -1,6 +1,5 @@
 #pragma once
 
-#include "simulation/simulation_actor.hpp"
 #include "vehicles/vehicle.hpp"
 
 #include <vector>
@@ -16,7 +15,7 @@ enum class Direction {
   SOUTH_TO_NORTH,
 };
 
-class TrafficFlow : public simulation::SimulationActor {
+class TrafficFlow {
  public:
   TrafficFlow(Direction direction, int vehicles_per_hour)
       : direction_(direction), vehiclesPerHour_(vehicles_per_hour) {}
@@ -25,19 +24,16 @@ class TrafficFlow : public simulation::SimulationActor {
   const std::vector<std::shared_ptr<Station>>& GetStations() const;
 
   void AddVehicle(std::shared_ptr<vehicles::Vehicle> v);
-  const std::vector<std::shared_ptr<vehicles::Vehicle>>& GetVehicles() const;
+  // const std::vector<std::shared_ptr<vehicles::Vehicle>>& GetVehicles() const;
 
   Direction GetDirection() const { return direction_; }
   int GetVehiclesPerHour() const { return vehiclesPerHour_; }
-
- protected:
-  void Act() override;
 
  private:
   Direction direction_;
   int vehiclesPerHour_;
   std::vector<std::shared_ptr<Station>> stations_;
-  std::vector<std::shared_ptr<vehicles::Vehicle>> vehicles_;
+  // std::vector<std::shared_ptr<vehicles::Vehicle>> vehicles_;
 };
 
 }  // namespace world
