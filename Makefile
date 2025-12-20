@@ -28,6 +28,7 @@ $(shell mkdir -p $(BUILD_DIR))
 SRC := \
 	src/main.cpp \
 	src/manager.cpp \
+	src/simulation/simulation_manager.cpp \
 	src/vehicles/vehicle.cpp \
 	src/vehicles/ev.cpp \
 	src/vehicles/vehicle_model.cpp \

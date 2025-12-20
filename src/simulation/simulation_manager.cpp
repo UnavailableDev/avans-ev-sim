@@ -12,17 +12,6 @@
 
 namespace simulation {
 
-void SimulationManager::StartSimulation() {
-  InitializeWorld();
-  for (const auto& flow : highway_->GetTrafficFlows()) {
-    if (flow) {
-      flow->Start();
-    }
-  }
-}
-
-void SimulationManager::StopSimulation() {}
-
 void SimulationManager::InitializeWorld() {
   highway_->SetLength(40.0);
   highway_->SetSpeedLimit(100.0);
@@ -38,10 +27,6 @@ void SimulationManager::InitializeWorld() {
 
   InitializeVehicleModels();
   InitializeVehicles();
-
-#if 1
-  PrintInitializationSummary();
-#endif
 }
 
 void SimulationManager::InitializeVehicleModels() {
@@ -52,61 +37,7 @@ void SimulationManager::InitializeVehicleModels() {
 }
 
 void SimulationManager::InitializeVehicles() {
-  /// Distribute EVs into each TrafficFlow based on that flow's vehicles-per-hour.
-  // First compute the per-flow expected vehicle counts and reserve storage.
-  int totalDistributionEVs = 0;
-  for (const auto& model : evModels_) {
-    totalDistributionEVs += model->GetDistribution();
-  }
 
-  double highwayLength = highway_->GetLength();
-
-  // Compute per-flow EV counts and total to reserve
-  std::vector<int> evs_per_flow;
-  evs_per_flow.reserve(highway_->GetTrafficFlows().size());
-  int totalEVs = 0;
-  for (const auto& flow : highway_->GetTrafficFlows()) {
-    double expectedVehicles = flow->GetVehiclesPerHour() * (simulationDurationMinutes_ / 60.0);
-    int evCount = static_cast<int>(expectedVehicles * evPercentage_);
-    evs_per_flow.push_back(evCount);
-    totalEVs += evCount;
-  }
-
-  evs_.reserve(totalEVs);
-
-  // Create EVs and place them into their flows
-  int id_counter = 0;
-  auto flows = highway_->GetTrafficFlows();
-  for (std::size_t f = 0; f < flows.size(); ++f) {
-    auto& flow = flows[f];
-    int n = evs_per_flow[f];
-    for (int j = 0; j < n; ++j) {
-      // Select EV model based on distribution
-      int randValue = rand() % totalDistributionEVs;
-      int cumulativeDistribution = 0;
-      std::shared_ptr<vehicles::EVModel> selectedModel = nullptr;
-
-      for (const auto& model : evModels_) {
-        cumulativeDistribution += model->GetDistribution();
-        if (randValue < cumulativeDistribution) {
-          selectedModel = model;
-          break;
-        }
-      }
-
-      if (selectedModel) {
-        auto ev = std::make_shared<vehicles::EV>(id_counter++, *selectedModel.get());
-
-        // TODO: Randomize start position along the highway
-        // ev->position_km_ = static_cast<double>(rand()) / RAND_MAX * highwayLength;
-
-        evs_.push_back(ev);
-        if (flow) {
-          flow->AddVehicle(ev);
-        }
-      }
-    }
-  }
 }
 
 void SimulationManager::PrintInitializationSummary() {
@@ -128,26 +59,6 @@ void SimulationManager::PrintInitializationSummary() {
                 << ", Position: " << station->GetPosition() << " km\n";
     }
   }
-  std::cout << "Number of EV Models: " << evModels_.size() << "\n";
-  for (const auto& model : evModels_) {
-    int count = 0;
-    for (const auto& ev : evs_) {
-      if (ev->GetModel().GetName() == model->GetName()) {
-        count++;
-      }
-    }
-    std::cout << "  - Model Name: " << model->GetName() 
-              << ", Battery Capacity: " << model->GetBatteryCapacity_kWh() << " kWh"
-              << ", Usage: " << model->GetUsage_Wh_km() << " Wh/km"
-              << ", Distribution: " << model->GetDistribution()
-              << ",  In simulation: " << count << " EVs\n";
-  }
-  std::cout << "Total EVs Initialized: " << evs_.size() << "\n";
-  // for (const auto& ev : evs_) {
-  //   std::cout << "  - EV ID: " << ev->GetID() 
-  //             << ", Model: " << ev->GetModel().GetName() 
-  //             << ", Initial SOC: " << ev->GetStateOfCharge() * 100 << "%\n";
-  // }
 }
 
 }  // namespace simulation

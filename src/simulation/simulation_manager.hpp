@@ -12,13 +12,14 @@ namespace simulation {
 class SimulationManager {
  public:
   SimulationManager(const double ev_percentage = 0.05) 
-  : evPercentage_(ev_percentage) {
+    : evPercentage_(ev_percentage) {
     highway_ = std::make_unique<world::Highway>();
+    InitializeWorld();
+    PrintInitializationSummary();
   }
   ~SimulationManager() = default;
 
-  void StartSimulation();
-  void StopSimulation();
+  void StepSimulation(int steps = 1);
 
  private:
   void InitializeWorld();
@@ -29,9 +30,6 @@ class SimulationManager {
 
   std::unique_ptr<world::Highway> highway_;
   std::vector<std::shared_ptr<vehicles::EVModel>> evModels_;
-  std::vector<std::shared_ptr<vehicles::EV>> evs_;
-
-  Statistics statistics_;
 
   // Configurations
   double evPercentage_;
