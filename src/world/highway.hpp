@@ -13,12 +13,14 @@ class TrafficFlow;
 
 class Highway {
  public:
-  Highway();
+  Highway() = default;
+  Highway(double length_km, double speed_kmh)
+    : length_km_(length_km), speed_kmh_(speed_kmh) {}
   ~Highway() = default;
-  void SetLength(double length_km) { length_km_ = length_km; }
-  void SetSpeedLimit(double speed_kmh) { speed_kmh_ = speed_kmh; }
 
   double GetLength() const { return length_km_; }
+
+  void SetSpeedLimit(double speed_kmh) { speed_kmh_ = speed_kmh; }
   double GetSpeedLimit() const { return speed_kmh_; }
 
   void AddTrafficFlow(std::shared_ptr<TrafficFlow> flow);

@@ -2,8 +2,6 @@
 
 namespace world {
 
-Highway::Highway() {}
-
 void Highway::AddTrafficFlow(std::shared_ptr<TrafficFlow> flow) {
   flows_.push_back(flow);
 }

@@ -13,7 +13,6 @@
 namespace simulation {
 
 void SimulationManager::InitializeWorld() {
-  highway_->SetLength(40.0);
   highway_->SetSpeedLimit(100.0);
 
   auto flowSN = std::make_shared<world::TrafficFlow>(world::Direction::SOUTH_TO_NORTH, 3688);
