@@ -4,6 +4,7 @@
 #include "vehicles/ev.hpp"
 
 #include "manager.hpp"
+#include "simulation/simulation_manager.hpp"
 
 int main() {
   while (1) {
@@ -24,11 +25,15 @@ int main() {
     input.clear();
 
     /// TODO: Start Simulation
-    InitializeManager();
-    StepSimulation();
-    StepSimulation();
-    StepSimulation();
-    StepSimulation();
+    // InitializeManager();
+    // StepSimulation();
+    // StepSimulation();
+    // StepSimulation();
+    // StepSimulation();
+
+    simulation::SimulationManager sim_manager(percentage);
+    sim_manager.StepSimulation(1);
+
 
     std::cout << "re-run? y/N: ";
     std::getline(std::cin, input);

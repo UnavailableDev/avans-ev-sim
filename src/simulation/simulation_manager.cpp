@@ -12,6 +12,12 @@
 
 namespace simulation {
 
+void SimulationManager::StepSimulation(int steps) {
+  for (int step = 0; step < steps; ++step) {
+    std::cout << "Simulation Step " << (step + 1) << " / " << steps << "\n";
+  }
+}
+
 void SimulationManager::InitializeWorld() {
   highway_->SetSpeedLimit(100.0);
 
