@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vehicle.hpp"
-#include "simulation/simulation_actor.hpp"
 #include "ev_model.hpp"
 
 // #include <atomic>
@@ -17,6 +16,7 @@ class EV : public Vehicle {
     return (static_cast<double>(rand())/ static_cast<double>(RAND_MAX))
            * (1.0-MIN_INITIAL_SOC) + MIN_INITIAL_SOC;
   };
+
  public:
   // explicit EV(EVModel model);
   EV(int id, const EVModel& model, double start_position_km = 0.0, double soc = RandomSOC())

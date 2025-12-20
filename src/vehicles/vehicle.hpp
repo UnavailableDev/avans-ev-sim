@@ -4,7 +4,8 @@
 
 namespace vehicles {
 
-class Vehicle : public simulation::SimulationActor {
+class Vehicle {
+// class Vehicle : public simulation::SimulationActor {
  public:
   virtual ~Vehicle() = default;
   virtual void Move(int distance_km) = 0;

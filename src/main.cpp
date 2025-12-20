@@ -1,7 +1,7 @@
-#include "simulation/simulation_manager.hpp"
-
 #include <iostream>
 #include <string>
+
+#include "vehicles/ev.hpp"
 
 int main() {
   while (1) {
@@ -21,11 +21,7 @@ int main() {
     std::cout << percentage <<std::endl;
     input.clear();
 
-    /// Simulation
-    simulation::SimulationManager manager(percentage);
-    manager.StartSimulation();
-
-    // manager.~SimulationManager();
+    /// TODO: Start Simulation
 
     std::cout << "re-run? y/N: ";
     std::getline(std::cin, input);
