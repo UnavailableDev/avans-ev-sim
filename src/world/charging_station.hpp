@@ -20,13 +20,14 @@ class ChargingStation : public Station {
 
   void HandleArrival() override;
 
-  // thread-safe methods to manage the queue
-  void AddToQueue(std::shared_ptr<vehicles::EV> ev);
-  std::shared_ptr<vehicles::EV> PopFromQueue();
-
   int GetQueueLength() const;
   int GetMaxQueueLength() const { return maxQueueLength_; }
   int GetChargeCount() const { return chargeCount_; }
+  
+ private:
+  // thread-safe methods to manage the queue
+  void AddToQueue(std::shared_ptr<vehicles::EV> ev);
+  std::shared_ptr<vehicles::EV> PopFromQueue();
 
  private:
   mutable std::mutex queueMutex_;

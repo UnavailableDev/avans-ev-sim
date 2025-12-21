@@ -17,6 +17,7 @@ class Station {
   Station(const std::string& name, double position_km)
       : name_(name), position_km_(position_km) {}
 
+ protected:
   std::string name_;
   double position_km_{0};
 };
