@@ -4,6 +4,9 @@
 #include <iostream>
 #include <memory>
 
+#include <vector>
+#include <thread>
+
 #include "world/highway.hpp"
 #include "world/charging_station.hpp"
 #include "world/traffic_flow.hpp"
@@ -13,7 +16,10 @@
 namespace simulation {
 
 void SimulationManager::StepSimulation(int steps) {
-  for (int step = 0; step < steps; ++step) {
+  for (size_t step = 0; step < steps; ++step) {
+    for (const auto& flow : highway_->GetTrafficFlows()) {
+      flow->StepSimulation(simulationStepMinutes_);
+    }
     std::cout << "Simulation Step " << (step + 1) << " / " << steps << "\n";
   }
 }

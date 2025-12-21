@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+#include <memory>
+#include <thread>
+
 #include "world/highway.hpp"
 #include "vehicles/ev_model.hpp"
 
@@ -23,6 +27,8 @@ class SimulationManager {
   void InitializeVehicles();
 
   void PrintInitializationSummary();
+
+  std::vector<std::thread> simulationThreads_;
 
   std::unique_ptr<world::Highway> highway_;
   std::vector<std::shared_ptr<vehicles::EVModel>> evModels_;

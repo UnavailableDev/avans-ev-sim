@@ -25,6 +25,9 @@ class TrafficFlow {
 
   void AddVehicle(std::shared_ptr<vehicles::Vehicle> v);
   // const std::vector<std::shared_ptr<vehicles::Vehicle>>& GetVehicles() const;
+  void PrintVehicles() const;
+
+  void StepSimulation(int minutes);
 
   Direction GetDirection() const { return direction_; }
   int GetVehiclesPerHour() const { return vehiclesPerHour_; }
