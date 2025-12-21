@@ -36,7 +36,7 @@ class SimulationManager {
   // Configurations
   double evPercentage_;
   int simulationDurationMinutes_{60};
-  int simulationStepMinutes_{1};
+  int simulationStepMinutes_{5};
 };
 
 }  // namespace simulation
