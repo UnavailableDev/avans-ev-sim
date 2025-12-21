@@ -8,8 +8,8 @@ namespace vehicles {
 class Vehicle {
 // class Vehicle : public simulation::SimulationActor {
  public:
-  Vehicle(int id, double position_km = 0.0) 
-      : id_(id), position_km_(position_km) {}
+  Vehicle(int id, double position_km = 0.0, double destination_km = 100.0) 
+      : id_(id), position_km_(position_km), destination_km_(destination_km) {}
   virtual ~Vehicle() = default;
 
   virtual void Move(double distance_km) = 0;

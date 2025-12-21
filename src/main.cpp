@@ -20,20 +20,12 @@ int main() {
     } else {
       percentage = (double)atoi(input.c_str())/100;
     }
-    
-    std::cout << percentage <<std::endl;
+
+    std::cout << percentage*100 << "%\n";
     input.clear();
 
-    /// TODO: Start Simulation
-    // InitializeManager();
-    // StepSimulation();
-    // StepSimulation();
-    // StepSimulation();
-    // StepSimulation();
-
     simulation::SimulationManager sim_manager(percentage);
-    sim_manager.StepSimulation(1);
-
+    sim_manager.StepSimulation(3);
 
     std::cout << "re-run? y/N: ";
     std::getline(std::cin, input);

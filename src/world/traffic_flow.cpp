@@ -1,5 +1,7 @@
 #include "traffic_flow.hpp"
 
+#include <vector>
+#include <memory>
 #include <thread>
 #include <iostream>
 
@@ -14,8 +16,15 @@ const std::vector<std::shared_ptr<vehicles::Vehicle>>& TrafficFlow::GetVehicles(
 void TrafficFlow::StepSimulation(double minutes, double speed_kmh) {
    double distance_km = (speed_kmh * minutes) / 60.0;
 
-   for (const auto& vehicle : vehicles_) {
-      vehicle->Move(static_cast<int>(distance_km));
+   std::vector<std::thread> threads(vehicles_.size());
+   for (size_t i = 0; i < vehicles_.size(); ++i) {
+      threads[i] = std::thread([this, i, distance_km]() {
+         vehicles_[i]->Move(distance_km);
+      });
+   }
+
+   for (auto& thread : threads) {
+      if (thread.joinable()) thread.join();
    }
 }
 

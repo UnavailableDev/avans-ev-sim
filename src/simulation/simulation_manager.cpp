@@ -16,12 +16,23 @@
 namespace simulation {
 
 void SimulationManager::StepSimulation(unsigned steps) {
-  for (size_t step = 0; step < steps; ++step) {
-    for (const auto& flow : highway_->GetTrafficFlows()) {
-      flow->StepSimulation(simulationStepMinutes_, highway_->GetSpeedLimit());
-    }
-    std::cout << "Simulation Step " << (step + 1) << " / " << steps << "\n";
+  std::vector<std::thread> threads(highway_->GetTrafficFlows().size());
+
+  for (size_t i = 0; i < threads.size(); i++) {
+    threads[i] = std::thread([this, i, steps]() {
+      for (size_t step = 0; step < steps; step++) {
+        highway_->GetTrafficFlows()[i]->StepSimulation(simulationStepMinutes_, highway_->GetSpeedLimit());
+      }
+    });
   }
+
+  for (auto& thread : threads) {
+    if (thread.joinable()) thread.join();
+  }
+
+  // for (size_t step = 0; step < steps; ++step) {
+  //   std::cout << "Simulation Step " << (step + 1) << " / " << steps << "\n";
+  // }
 }
 
 void SimulationManager::InitializeWorld() {

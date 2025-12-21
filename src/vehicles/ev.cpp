@@ -15,6 +15,8 @@ void EV::Move(double distance_km) {
   if (soc_ < 0) {
     std::cout << "EV ID " << id_ << " has depleted its battery!\n";
     // running_ = false;
+  } else if (position_km_ > destination_km_) {
+    std::cout << "EV ID " << id_ << ", soc: " << soc_ * 100 << "%" << ", has reached its destination.\n";
   }
 }
 
