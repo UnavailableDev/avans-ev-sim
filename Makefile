@@ -27,7 +27,6 @@ $(shell mkdir -p $(BUILD_DIR))
 # ============================================================
 SRC := \
 	src/main.cpp \
-	src/manager.cpp \
 	src/simulation/simulation_manager.cpp \
 	src/world/highway.cpp \
 	src/world/traffic_flow.cpp \

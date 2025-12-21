@@ -3,7 +3,6 @@
 
 #include "vehicles/ev.hpp"
 
-#include "manager.hpp"
 #include "simulation/simulation_manager.hpp"
 
 int main() {
