@@ -24,10 +24,11 @@ class TrafficFlow {
   const std::vector<std::shared_ptr<Station>>& GetStations() const;
 
   void AddVehicle(std::shared_ptr<vehicles::Vehicle> v);
-  // const std::vector<std::shared_ptr<vehicles::Vehicle>>& GetVehicles() const;
+  const std::vector<std::shared_ptr<vehicles::Vehicle>>& GetVehicles() const;
+
   void PrintVehicles() const;
 
-  void StepSimulation(int minutes);
+  void StepSimulation(double minutes, double speed_kmh);
 
   Direction GetDirection() const { return direction_; }
   int GetVehiclesPerHour() const { return vehiclesPerHour_; }
@@ -36,7 +37,7 @@ class TrafficFlow {
   Direction direction_;
   int vehiclesPerHour_;
   std::vector<std::shared_ptr<Station>> stations_;
-  // std::vector<std::shared_ptr<vehicles::Vehicle>> vehicles_;
+  std::vector<std::shared_ptr<vehicles::Vehicle>> vehicles_;
 };
 
 }  // namespace world

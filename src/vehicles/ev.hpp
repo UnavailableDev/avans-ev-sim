@@ -20,15 +20,19 @@ class EV : public Vehicle {
  public:
   // explicit EV(EVModel model);
   EV(int id, const EVModel& model, double start_position_km = 0.0, double soc = RandomSOC())
-      : Vehicle(id, start_position_km), model_(model), soc_(soc) {
-  }
+    : Vehicle(id, start_position_km), model_(model), soc_(soc) {}
+
+  // Overload to accept shared_ptr<EVModel>
+  EV(int id, const std::shared_ptr<EVModel>& model_ptr, double start_position_km = 0.0, double soc = RandomSOC())
+    : Vehicle(id, start_position_km), model_(*model_ptr), soc_(soc) {}
   ~EV() override = default;
 
   const EVModel& GetModel() const { return model_; }
   double GetStateOfCharge() const { return soc_; }
 
 //  protected:
-  void Move(int distance_km) override;
+  void Move(double distance_km) override;
+  void PrintInfo() const override;
 
  private:
   EVModel model_;

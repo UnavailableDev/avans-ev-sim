@@ -19,7 +19,7 @@ class SimulationManager {
   }
   ~SimulationManager() = default;
 
-  void StepSimulation(int steps = 1);
+  void StepSimulation(unsigned steps = 1);
 
  private:
   void InitializeWorld();

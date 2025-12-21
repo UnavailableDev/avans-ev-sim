@@ -5,7 +5,7 @@
 namespace vehicles {
 
 
-void EV::Move(int distance_km) {
+void EV::Move(double distance_km) {
   // Placeholder movement
   position_km_ += distance_km;
   // Decrease state of charge based on model usage
@@ -16,6 +16,14 @@ void EV::Move(int distance_km) {
     std::cout << "EV ID " << id_ << " has depleted its battery!\n";
     // running_ = false;
   }
+}
+
+void EV::PrintInfo() const {
+    std::cout << "EV ID: " << id_ 
+              << ", Model: " << model_.GetName() 
+              << ", Position: " << position_km_ << " km"
+              << ", Destination: " << destination_km_ << " km"
+              << ", State of Charge: " << soc_ * 100 << " %\n"; 
 }
 
 }  // namespace vehicles
