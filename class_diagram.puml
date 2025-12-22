@@ -1,0 +1,74 @@
+@startuml EV_Simulation_Architecture
+
+namespace vehicles {
+    abstract class VehicleModel {
+        + GetName()
+    }
+
+    abstract class Vehicle {
+        + Move()
+        + GetID()
+        + GetPosition_km()
+    }
+
+    class EVModel {
+        + GetBatteryCapacity_kWh()
+        + GetUsage_Wh_km()
+    }
+
+    class EV {
+        + GetStateOfCharge()
+        + Move()
+    }
+
+    VehicleModel <|-- EVModel
+    Vehicle <|-- EV
+    EV *-- EVModel
+}
+
+namespace world {
+    abstract class Station {
+        + HandleArrival()
+        + GetName()
+        + GetPosition()
+    }
+
+    class ChargingStation {
+        + GetQueueLength()
+        + GetChargeCount()
+    }
+
+    class Highway {
+        + GetLength()
+        + GetSpeedLimit()
+        + AddTrafficFlow()
+    }
+
+    enum Direction {
+        NORTH_TO_SOUTH
+        SOUTH_TO_NORTH
+    }
+
+    class TrafficFlow {
+        + AddStation()
+        + AddVehicle()
+        + StepSimulation()
+    }
+
+    Station <|-- ChargingStation
+    Highway o-- TrafficFlow : contains
+    TrafficFlow o-- Station : contains
+    TrafficFlow o-- vehicles.Vehicle : contains
+    TrafficFlow -- Direction
+}
+
+namespace simulation {
+    class SimulationManager {
+        + StepSimulation()
+    }
+
+    SimulationManager --> world.Highway
+    SimulationManager --> vehicles.EVModel
+}
+
+@enduml
