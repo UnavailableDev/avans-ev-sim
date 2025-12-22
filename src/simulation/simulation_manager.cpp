@@ -38,8 +38,8 @@ void SimulationManager::StepSimulation(unsigned steps) {
 void SimulationManager::InitializeWorld() {
   highway_->SetSpeedLimit(100.0);
 
-  auto flowSN = std::make_shared<world::TrafficFlow>(world::Direction::SOUTH_TO_NORTH, 3688);
-  auto flowNS = std::make_shared<world::TrafficFlow>(world::Direction::NORTH_TO_SOUTH, 4321);
+  auto flowSN = std::make_shared<world::TrafficFlow>(world::Direction::kSouthToNorth, 3688);
+  auto flowNS = std::make_shared<world::TrafficFlow>(world::Direction::kNorthToSouth, 4321);
   auto station1 = std::make_shared<world::ChargingStation>("Station Lingehorst", 30.0);
   auto station2 = std::make_shared<world::ChargingStation>("Station Bisde", 12.0);
   flowSN->AddStation(station1);
@@ -91,7 +91,7 @@ void SimulationManager::PrintInitializationSummary() {
   std::cout << "Number of Traffic Flows: " << highway_->GetTrafficFlows().size() << "\n";
   for (const auto& flow : highway_->GetTrafficFlows()) {
     std::cout << "  - Flow Direction: " 
-              << (flow->GetDirection() == world::Direction::NORTH_TO_SOUTH ? "North to South" : "South to North")
+              << (flow->GetDirection() == world::Direction::kNorthToSouth ? "North to South" : "South to North")
               << ", Vehicles per Hour: " << flow->GetVehiclesPerHour() << "\n";
     for (const auto& station : flow->GetStations()) {
       std::cout << "  - Station Name: " << station->GetName()

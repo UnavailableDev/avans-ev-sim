@@ -11,8 +11,8 @@
 namespace world {
 
 enum class Direction {
-  NORTH_TO_SOUTH,
-  SOUTH_TO_NORTH,
+  kNorthToSouth,
+  kSouthToNorth,
 };
 
 class TrafficFlow {
