@@ -37,7 +37,6 @@ bool EV::Action(double distance_km) {
         if (station->GetPosition() - position_km_ <= distance_km) {
           this->atStation_ = true;
           position_km_ = station->GetPosition();
-          // Pass actual EV object via self_ptr instead of creating a copy
           station->HandleArrival(std::dynamic_pointer_cast<EV>(self_ptr_));
           return false;
         } else {
