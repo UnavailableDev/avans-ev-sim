@@ -33,3 +33,4 @@ Coding style follows the **Google C++ Style Guide**.
 - [ ] (optional) make charging take correct amount of time (adjust both flow and station code)
 - [ ] (optional) make prints pretier
 - [ ] Update PlantUML
+- [ ] (optional) Add threading diagram (sequence diagram?)
