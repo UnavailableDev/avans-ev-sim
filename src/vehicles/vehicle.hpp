@@ -25,6 +25,10 @@ class Vehicle {
     routeStations_ = stations;
   }
 
+  void SetSelfPtr(std::shared_ptr<Vehicle> self) {
+    self_ptr_ = self;
+  }
+
   int GetID() const { return id_; }
   double GetPosition_km() const { return position_km_; }
   
@@ -45,6 +49,7 @@ class Vehicle {
   world::FuelType fuelType_{world::FuelType::kCombustion};
   std::vector<std::shared_ptr<world::Station>> routeStations_{};
   bool atStation_{false};
+  std::shared_ptr<Vehicle> self_ptr_{nullptr};  // Shared pointer to self, set by TrafficFlow
 };
 
 }  // namespace vehicles

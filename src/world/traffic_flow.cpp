@@ -12,6 +12,7 @@ const std::vector<std::shared_ptr<Station>>& TrafficFlow::GetStations() const { 
 
 void TrafficFlow::AddVehicle(std::shared_ptr<vehicles::Vehicle> vehicle) { 
    vehicle->SetStations(stations_);
+   vehicle->SetSelfPtr(vehicle);  // Give vehicle a shared_ptr to itself
    vehicles_.push_back(vehicle); 
 }
 const std::vector<std::shared_ptr<vehicles::Vehicle>>& TrafficFlow::GetVehicles() const { return vehicles_; }
