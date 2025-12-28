@@ -34,3 +34,5 @@ Coding style follows the **Google C++ Style Guide**.
 - [ ] (optional) make prints pretier
 - [ ] Update PlantUML
 - [ ] (optional) Add threading diagram (sequence diagram?)
+- [ ] EVModel distrobution
+- [ ] Adjust timesteps in simulator?
