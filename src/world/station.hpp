@@ -2,6 +2,12 @@
 
 #include <string>
 
+enum class FuelType {
+  kElectric,
+  kHybrid,
+  kCombustion
+};
+
 namespace world {
 
 class Station {
@@ -20,6 +26,7 @@ class Station {
  protected:
   std::string name_;
   double position_km_{0};
+  FuelType fuelType_{FuelType::kCombustion};
 };
 
 }  // namespace world

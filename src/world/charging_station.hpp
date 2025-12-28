@@ -23,7 +23,10 @@ class ChargingStation : public Station {
   int GetQueueLength() const;
   int GetMaxQueueLength() const { return maxQueueLength_; }
   int GetChargeCount() const { return chargeCount_; }
-  
+
+ protected:
+  FuelType fuelType_{FuelType::kElectric};
+
  private:
   // thread-safe methods to manage the queue
   void AddToQueue(std::shared_ptr<vehicles::EV> ev);

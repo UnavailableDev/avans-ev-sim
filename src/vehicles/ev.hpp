@@ -3,7 +3,6 @@
 #include "vehicle.hpp"
 #include "ev_model.hpp"
 
-// #include <atomic>
 #include <memory>
 #include <random>
 
@@ -35,10 +34,12 @@ class EV : public Vehicle {
   void Move(double distance_km) override;
   void PrintInfo() const override;
 
+ protected:
+  FuelType fuelType_{FuelType::kElectric};
+
  private:
   EVModel model_;
   double soc_{1.0}; // state of charge 0.0 - 1.0
-  // std::atomic<bool> active_{false};
 };
 
 }  // namespace vehicles
