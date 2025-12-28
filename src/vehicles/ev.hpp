@@ -29,13 +29,17 @@ class EV : public Vehicle {
 
   const EVModel& GetModel() const { return model_; }
   double GetStateOfCharge() const { return soc_; }
+  void SetStateOfCharge(double soc) { soc_ = soc; }
 
 //  protected:
   void Move(double distance_km) override;
   void PrintInfo() const override;
 
  protected:
-  FuelType fuelType_{FuelType::kElectric};
+  bool Action() override;
+
+ protected:
+  world::FuelType fuelType_{world::FuelType::kElectric};
 
  private:
   EVModel model_;

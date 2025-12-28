@@ -1,6 +1,7 @@
 #pragma once
 
 #include "station.hpp"
+#include "vehicles/ev.hpp"
 
 #include <queue>
 #include <mutex>
@@ -18,14 +19,14 @@ class ChargingStation : public Station {
       : Station(name, position_km) {};
   ~ChargingStation() override = default;
 
-  void HandleArrival() override;
+  void HandleArrival(std::shared_ptr<vehicles::Vehicle> v) override;
 
   int GetQueueLength() const;
   int GetMaxQueueLength() const { return maxQueueLength_; }
   int GetChargeCount() const { return chargeCount_; }
 
  protected:
-  FuelType fuelType_{FuelType::kElectric};
+  world::FuelType fuelType_{world::FuelType::kElectric};
 
  private:
   // thread-safe methods to manage the queue

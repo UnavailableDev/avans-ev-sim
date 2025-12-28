@@ -1,19 +1,18 @@
 #pragma once
 
 #include <string>
+#include <memory>
+#include "world/fuel_type.hpp"
 
-enum class FuelType {
-  kElectric,
-  kHybrid,
-  kCombustion
-};
+namespace vehicles { class Vehicle; }
 
 namespace world {
 
 class Station {
  public:
   virtual ~Station() = default;
-  virtual void HandleArrival() = 0;
+  // Accept vehicle by shared_ptr to avoid slicing / abstract-type-by-value
+  virtual void HandleArrival(std::shared_ptr<vehicles::Vehicle> v) = 0;
 
   const std::string& GetName() const { return name_; }
   double GetPosition() const { return position_km_; }

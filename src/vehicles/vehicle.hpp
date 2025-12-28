@@ -3,8 +3,11 @@
 #include "vehicle_model.hpp"
 
 #include <vector>
+#include <memory>
 
-#include "world/station.hpp"
+#include "world/fuel_type.hpp"
+
+namespace world { class Station; }
 
 namespace vehicles {
 
@@ -39,7 +42,7 @@ class Vehicle {
   // VehicleModel model_;
   double position_km_{0};
   double destination_km_{0};
-  FuelType fuelType_{FuelType::kCombustion};
+  world::FuelType fuelType_{world::FuelType::kCombustion};
   std::vector<std::shared_ptr<world::Station>> routeStations_{};
 };
 

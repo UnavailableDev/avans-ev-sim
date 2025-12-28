@@ -2,7 +2,13 @@
 
 namespace world {
 
-void ChargingStation::HandleArrival() {}
+void ChargingStation::HandleArrival(std::shared_ptr<vehicles::Vehicle> v) {
+  // If the arriving vehicle is an EV, add it to the charging queue
+  auto ev_ptr = std::dynamic_pointer_cast<vehicles::EV>(v);
+  if (ev_ptr) {
+    AddToQueue(ev_ptr);
+  }
+}
 
 void ChargingStation::AddToQueue(std::shared_ptr<vehicles::EV> ev) {
   std::lock_guard<std::mutex> lock(queueMutex_);
