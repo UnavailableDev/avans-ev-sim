@@ -30,6 +30,8 @@ void SimulationManager::StepSimulation(unsigned steps) {
     if (thread.joinable()) thread.join();
   }
 
+  PrintStatus();
+
   // for (size_t step = 0; step < steps; ++step) {
   //   std::cout << "Simulation Step " << (step + 1) << " / " << steps << "\n";
   // }
@@ -101,6 +103,23 @@ void SimulationManager::PrintInitializationSummary() {
     // for (const auto& vehicle : flow->GetVehicles()) {
     //   vehicle->PrintInfo();
     // }
+  }
+}
+
+void SimulationManager::PrintStatus() {
+  std::cout << "Simulation Status:\n";
+  for (const auto& flow : highway_->GetTrafficFlows()) {
+    std::cout << "Traffic Flow Direction: " 
+              << (flow->GetDirection() == world::Direction::kNorthToSouth ? "North to South" : "South to North") 
+              << "\n";
+    for (const auto& station : flow->GetStations()) {
+      auto chargingStation = std::dynamic_pointer_cast<world::ChargingStation>(station);
+      if (chargingStation) {
+        std::cout << "  - Station Name: " << chargingStation->GetName() 
+                  << ", Total Charges: " << chargingStation->GetChargeCount() 
+                  << ", Max Queue Length: " << chargingStation->GetMaxQueueLength() << "\n";
+      }
+    }
   }
 }
 

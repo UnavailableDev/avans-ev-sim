@@ -27,6 +27,7 @@ class SimulationManager {
   void InitializeVehicles();
 
   void PrintInitializationSummary();
+  void PrintStatus();
 
   std::vector<std::thread> simulationThreads_;
 
