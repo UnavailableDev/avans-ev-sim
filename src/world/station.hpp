@@ -16,6 +16,7 @@ class Station {
 
   const std::string& GetName() const { return name_; }
   double GetPosition() const { return position_km_; }
+  FuelType GetFuelType() const { return fuelType_; }
 
  protected:
   Station() = default;

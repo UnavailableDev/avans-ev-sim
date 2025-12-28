@@ -3,8 +3,7 @@
 
 namespace vehicles {
 
-bool Vehicle::Action() { return true; }
-
+// bool Vehicle::Action(double distance_km) { return true; }
 void Vehicle::PrintInfo() const {
 	std::cout << "Vehicle ID: " << id_ << ", traveled: " << (position_km_/destination_km_) << " %\n";
 }

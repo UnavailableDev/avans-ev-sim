@@ -35,7 +35,7 @@ class Vehicle {
 
   /// @brief Implement specific vehicle action
   /// @return True if allowed to move, false otherwise
-  virtual bool Action();
+  virtual bool Action(double distance_km) = 0;
 
  protected:
   int id_{0};
@@ -44,6 +44,7 @@ class Vehicle {
   double destination_km_{0};
   world::FuelType fuelType_{world::FuelType::kCombustion};
   std::vector<std::shared_ptr<world::Station>> routeStations_{};
+  bool atStation_{false};
 };
 
 }  // namespace vehicles

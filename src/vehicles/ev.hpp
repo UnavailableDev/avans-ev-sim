@@ -36,7 +36,7 @@ class EV : public Vehicle {
   void PrintInfo() const override;
 
  protected:
-  bool Action() override;
+  bool Action(double distance_km) override;
 
  protected:
   world::FuelType fuelType_{world::FuelType::kElectric};
