@@ -20,6 +20,7 @@ class ChargingStation : public Station {
   ~ChargingStation() override = default;
 
   void HandleArrival(std::shared_ptr<vehicles::Vehicle> v) override;
+  void Update() override;
 
   int GetQueueLength() const;
   int GetMaxQueueLength() const { return maxQueueLength_; }

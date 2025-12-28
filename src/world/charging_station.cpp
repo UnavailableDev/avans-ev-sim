@@ -10,6 +10,16 @@ void ChargingStation::HandleArrival(std::shared_ptr<vehicles::Vehicle> v) {
   }
 }
 
+void ChargingStation::Update() {
+  // Here you could implement logic to charge vehicles in the queue
+  // For simplicity, we'll just pop one vehicle from the queue per update
+  auto ev = PopFromQueue();
+  if (ev) {
+    // Simulate charging by setting its state of charge to 1.0
+    ev->SetStateOfCharge(1.0);
+  }
+}
+
 void ChargingStation::AddToQueue(std::shared_ptr<vehicles::EV> ev) {
   std::lock_guard<std::mutex> lock(queueMutex_);
   evQueue_.push(ev);

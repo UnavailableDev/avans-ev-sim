@@ -13,6 +13,7 @@ class Station {
   virtual ~Station() = default;
   // Accept vehicle by shared_ptr to avoid slicing / abstract-type-by-value
   virtual void HandleArrival(std::shared_ptr<vehicles::Vehicle> v) = 0;
+  virtual void Update() = 0;
 
   const std::string& GetName() const { return name_; }
   double GetPosition() const { return position_km_; }
