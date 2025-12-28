@@ -117,7 +117,8 @@ void SimulationManager::PrintStatus() {
       if (chargingStation) {
         std::cout << "  - Station Name: " << chargingStation->GetName() 
                   << ", Total Charges: " << chargingStation->GetChargeCount() 
-                  << ", Max Queue Length: " << chargingStation->GetMaxQueueLength() << "\n";
+                  << ", Max Queue Length: " << chargingStation->GetMaxQueueLength()
+                  << ", Current Queue Length: " << chargingStation->GetQueueLength() << "\n";
       }
     }
   }

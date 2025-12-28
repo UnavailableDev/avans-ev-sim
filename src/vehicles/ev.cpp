@@ -27,7 +27,7 @@ bool EV::Action(double distance_km) {
     std::cout << "EV ID " << id_ << " has depleted its battery!\n";
     // running_ = false;
     return false;
-  } else if (soc_ < 0.1) {
+  } else if (soc_ < 0.20) {
     if (atStation_)
       return false;
 
@@ -46,8 +46,13 @@ bool EV::Action(double distance_km) {
       }
     }
   } else if (atStation_) {
-    // Leaving station after charging
-    atStation_ = false;
+    // Only leave station if we've been charged to acceptable level
+    if (soc_ >= 0.9) {
+      // Fully charged, safe to leave
+      atStation_ = false;
+    } else {
+      return false;
+    }
   }
   return true;
 }
