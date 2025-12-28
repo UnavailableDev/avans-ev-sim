@@ -10,20 +10,34 @@ namespace world {
 void TrafficFlow::AddStation(std::shared_ptr<Station> station) { stations_.push_back(station); }
 const std::vector<std::shared_ptr<Station>>& TrafficFlow::GetStations() const { return stations_; }
 
-void TrafficFlow::AddVehicle(std::shared_ptr<vehicles::Vehicle> vehicle) { vehicles_.push_back(vehicle); }
+void TrafficFlow::AddVehicle(std::shared_ptr<vehicles::Vehicle> vehicle) { 
+   vehicle->SetStations(stations_);
+   vehicles_.push_back(vehicle); 
+}
 const std::vector<std::shared_ptr<vehicles::Vehicle>>& TrafficFlow::GetVehicles() const { return vehicles_; }
 
 void TrafficFlow::StepSimulation(double minutes, double speed_kmh) {
    double distance_km = (speed_kmh * minutes) / 60.0;
 
-   std::vector<std::thread> threads(vehicles_.size());
+   std::vector<std::thread> vehicleThreads(vehicles_.size());
    for (size_t i = 0; i < vehicles_.size(); ++i) {
-      threads[i] = std::thread([this, i, distance_km]() {
+      vehicleThreads[i] = std::thread([this, i, distance_km]() {
          vehicles_[i]->Move(distance_km);
       });
    }
 
-   for (auto& thread : threads) {
+   std::vector<std::thread> stationThreads(stations_.size());
+   for (size_t j = 0; j < stations_.size(); ++j) {
+      stationThreads[j] = std::thread([this, j]() {
+         stations_[j]->Update();
+      });
+   }
+
+   for (auto& thread : vehicleThreads) {
+      if (thread.joinable()) thread.join();
+   }
+
+   for (auto& thread : stationThreads) {
       if (thread.joinable()) thread.join();
    }
 }

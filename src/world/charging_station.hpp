@@ -16,7 +16,7 @@ namespace world {
 class ChargingStation : public Station {
  public:
   ChargingStation(std::string name, double position_km)
-      : Station(name, position_km) {};
+      : Station(name, position_km) { fuelType_ = world::FuelType::kElectric; };
   ~ChargingStation() override = default;
 
   void HandleArrival(std::shared_ptr<vehicles::Vehicle> v) override;
@@ -27,7 +27,7 @@ class ChargingStation : public Station {
   int GetChargeCount() const { return chargeCount_; }
 
  protected:
-  world::FuelType fuelType_{world::FuelType::kElectric};
+  // Use the base class `fuelType_` member; set to electric in constructor
 
  private:
   // thread-safe methods to manage the queue
