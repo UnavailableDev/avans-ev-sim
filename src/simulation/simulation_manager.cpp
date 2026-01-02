@@ -51,6 +51,7 @@ void SimulationManager::InitializeWorld() {
 
   InitializeVehicleModels();
   InitializeVehicles();
+  PrintInitializationSummary();
 }
 
 void SimulationManager::InitializeVehicleModels() {
@@ -63,16 +64,18 @@ void SimulationManager::InitializeVehicleModels() {
 void SimulationManager::InitializeVehicles() {
   double destination_km = highway_->GetLength();
   double speed_kmh = highway_->GetSpeedLimit();
+  
+  std::random_device rd;
+  std::mt19937 gen(rd());
 
   uint64_t vehicleID = 0;
+  
   for (const auto& flow : highway_->GetTrafficFlows()) {
     int totalVehiclesPerHour = flow->GetVehiclesPerHour();
     double evCountDouble = static_cast<double>(totalVehiclesPerHour) * (destination_km / speed_kmh) * evPercentage_;
     int evCount = static_cast<int>(evCountDouble);
 
     for (int i = 0; i < evCount; ++i) {
-      std::random_device rd;
-      std::mt19937 gen(rd());
       std::uniform_real_distribution<> dis(0.0, destination_km);
       double start_position_km = dis(gen);
       auto ev = std::make_shared<vehicles::EV>(vehicleID++, evModels_.at(i % evModels_.size()), start_position_km, destination_km);
@@ -100,9 +103,9 @@ void SimulationManager::PrintInitializationSummary() {
                 << ", Position: " << station->GetPosition() << " km\n";
     }
     std::cout << "  - Vehicles in Flow: " << flow->GetVehicles().size() << "\n";
-    // for (const auto& vehicle : flow->GetVehicles()) {
-    //   vehicle->PrintInfo();
-    // }
+    for (const auto& vehicle : flow->GetVehicles()) {
+      vehicle->PrintInfo();
+    }
   }
 }
 
