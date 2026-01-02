@@ -116,9 +116,14 @@ void SimulationManager::PrintStatus() {
       auto chargingStation = std::dynamic_pointer_cast<world::ChargingStation>(station);
       if (chargingStation) {
         std::cout << "  - Station Name: " << chargingStation->GetName() 
-                  << ", Total Charges: " << chargingStation->GetChargeCount() 
-                  << ", Max Queue Length: " << chargingStation->GetMaxQueueLength()
-                  << ", Current Queue Length: " << chargingStation->GetQueueLength() << "\n";
+                  << "\n\tTotal Charges: " << chargingStation->GetChargeCount() 
+                  << ", Total Time: " << chargingStation->GetChargeCount() * 12 << " minutes\n"
+                  << "\tTotal Energy Delivered: " << chargingStation->GetTotalCharged() << " kWh\n"
+                  << "\tMax Queue Length: " << chargingStation->GetMaxQueueLength() 
+                  << std::endl
+                  // << ", Max Queue Time: " << chargingStation->GetMaxQueueLength() * 12 << " minutes\n"
+                  << "\tCurrent Queue Length: " << chargingStation->GetQueueLength()
+                  << ", Current Queue Time: " << chargingStation->GetQueueLength() * 12 << " minutes\n";
       }
     }
   }

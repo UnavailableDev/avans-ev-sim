@@ -25,6 +25,7 @@ class ChargingStation : public Station {
   int GetQueueLength() const;
   int GetMaxQueueLength() const { return maxQueueLength_; }
   int GetChargeCount() const { return chargeCount_; }
+  float GetTotalCharged() const { return totalCharged_; }
 
  protected:
   // Use the base class `fuelType_` member; set to electric in constructor
@@ -37,8 +38,8 @@ class ChargingStation : public Station {
  private:
   mutable std::mutex queueMutex_;
   std::queue<std::shared_ptr<vehicles::EV>> evQueue_;
+  float totalCharged_{0.0f};
 
-  // int queue_length_{0};
   int maxQueueLength_{0};
   int chargeCount_{0};
 };

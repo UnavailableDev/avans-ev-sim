@@ -38,6 +38,8 @@ std::shared_ptr<vehicles::EV> ChargingStation::PopFromQueue() {
   auto ev = evQueue_.front();
   evQueue_.pop();
   chargeCount_++;
+  double soc = ev->GetStateOfCharge();
+  totalCharged_ += soc * ev->GetModel().GetBatteryCapacity_kWh();
   return ev;
 }
 

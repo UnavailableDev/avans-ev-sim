@@ -31,7 +31,7 @@ Coding style follows the **Google C++ Style Guide**.
 - [ ] change call order to Action -> Move in EV/Vehicle (This makes the fuel usage a bit more accurate)
 - [ ] Throw warning if station has still vehicles queued at en of simulation
 - [ ] (optional) make charging take correct amount of time (adjust both flow and station code)
-- [ ] (optional) make prints pretier
+- [x] (optional) make prints pretier
 - [ ] Update PlantUML
 - [ ] (optional) Add threading diagram (sequence diagram?)
 - [ ] EVModel distrobution
