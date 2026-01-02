@@ -69,7 +69,16 @@ void SimulationManager::InitializeVehicles() {
   std::mt19937 gen(rd());
 
   uint64_t vehicleID = 0;
-  
+  if (evModels_.empty()) return;
+
+  // Build a weighted distribution from EVModel::GetDistribution()
+  std::vector<double> weights;
+  weights.reserve(evModels_.size());
+  for (const auto& model : evModels_) {
+    weights.push_back(static_cast<double>(model->GetDistribution()));
+  }
+  std::discrete_distribution<> modelDist(weights.begin(), weights.end());
+
   for (const auto& flow : highway_->GetTrafficFlows()) {
     int totalVehiclesPerHour = flow->GetVehiclesPerHour();
     double evCountDouble = static_cast<double>(totalVehiclesPerHour) * (destination_km / speed_kmh) * evPercentage_;
@@ -78,7 +87,9 @@ void SimulationManager::InitializeVehicles() {
     for (int i = 0; i < evCount; ++i) {
       std::uniform_real_distribution<> dis(0.0, destination_km);
       double start_position_km = dis(gen);
-      auto ev = std::make_shared<vehicles::EV>(vehicleID++, evModels_.at(i % evModels_.size()), start_position_km, destination_km);
+      // pick a model index according to the weighted distribution
+      int modelIndex = modelDist(gen);
+      auto ev = std::make_shared<vehicles::EV>(vehicleID++, evModels_.at(static_cast<size_t>(modelIndex)), start_position_km, destination_km);
       flow->AddVehicle(ev);
     }
   }
