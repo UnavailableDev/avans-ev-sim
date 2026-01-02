@@ -66,7 +66,7 @@ void SimulationManager::InitializeVehicles() {
   double speed_kmh = highway_->GetSpeedLimit();
   
   std::random_device rd;
-  std::mt19937 gen(rd());
+  std::mt19937 genRandom(rd());
 
   uint64_t vehicleID = 0;
   if (evModels_.empty()) return;
@@ -86,9 +86,9 @@ void SimulationManager::InitializeVehicles() {
 
     for (int i = 0; i < evCount; ++i) {
       std::uniform_real_distribution<> dis(0.0, destination_km);
-      double start_position_km = dis(gen);
+      double start_position_km = dis(genRandom);
       // pick a model index according to the weighted distribution
-      int modelIndex = modelDist(gen);
+      int modelIndex = modelDist(genRandom);
       auto ev = std::make_shared<vehicles::EV>(vehicleID++, evModels_.at(static_cast<size_t>(modelIndex)), start_position_km, destination_km);
       flow->AddVehicle(ev);
     }
