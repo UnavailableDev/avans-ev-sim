@@ -1,0 +1,122 @@
+@startuml Thread Activity Diagram
+
+!define THREAD_COLOR #CCFFCC
+!define SYNC_COLOR #FFCCCC
+
+title Thread Activity Flow: SimulationManager to EV Charging
+
+participant "Main Thread" as Main
+participant "TrafficFlow Threads\n(Array of threads)" as TFThreads
+participant "Vehicle Threads\n(Array of threads)" as VThreads
+participant "Station Threads\n(Array of threads)" as SThreads
+
+== Simulation Step ==
+Main -> Main: StepSimulation(steps)
+Main -> Main: Create TrafficFlow threads\n(one per traffic flow)
+
+== TrafficFlow Update Phase ==
+loop each traffic flow
+    Main ->> TFThreads: Launch thread for\nTrafficFlow::StepSimulation()
+end
+
+par TrafficFlow Threads Execute (parallel)
+    TFThreads -> TFThreads: StepSimulation(minutes, speed_limit)
+    TFThreads -> TFThreads: Calculate distance_km\nfor this time step
+    
+    par Vehicle Simulation (parallel within each flow)
+        TFThreads ->> VThreads: Create Vehicle threads\n(one per vehicle in flow)
+        
+        loop each vehicle
+            VThreads -> VThreads: Vehicle::Move(distance_km)
+            
+            alt Action Phase
+                VThreads -> VThreads: EV::Action(distance_km)
+                
+                alt Check SOC & Stations
+                    opt if SOC < 20% & not atStation
+                        VThreads -> VThreads: Find upcoming charging station\nwithin travel distance
+                        
+                        alt Station in range
+                            VThreads -> VThreads: Set position to station
+                            VThreads -> VThreads: Set atStation = true
+                            VThreads -> VThreads: Get shared_ptr(self)
+                            
+                            Note over VThreads: Call station->HandleArrival()\nfrom different thread
+                            VThreads ->> SThreads: Trigger station logic
+                            
+                            alt In ChargingStation::HandleArrival()
+                                SThreads -> SThreads: dynamic_cast to EV
+                                SThreads -> SThreads: AddToQueue(ev_ptr)
+                                
+                                Note over SThreads: Thread-safe queue update\nwith mutex lock
+                                SThreads -> SThreads: Lock queueMutex_
+                                SThreads -> SThreads: evQueue_.push(ev)
+                                SThreads -> SThreads: Update maxQueueLength_
+                                SThreads -> SThreads: Unlock queueMutex_
+                            end
+                            
+                            VThreads -> VThreads: Return false (can't move)
+                        else Station not in range
+                            VThreads -> VThreads: Return true (continue moving)
+                        end
+                    end
+                    
+                    opt if atStation & SOC >= 90%
+                        VThreads -> VThreads: Set atStation = false
+                        VThreads -> VThreads: Return true (leave station)
+                    else if atStation & SOC < 90%
+                        VThreads -> VThreads: Return false (wait for charging)
+                    end
+                end
+            end
+            
+            alt If allowed to move
+                VThreads -> VThreads: Update position_km
+                VThreads -> VThreads: Decrease SOC based on\nconsumption model
+                
+                opt if position >= destination
+                    VThreads -> VThreads: Reset position to 0
+                    VThreads -> VThreads: Randomize SOC
+                end
+            end
+        end
+        
+        par Wait for all vehicle threads to complete
+            VThreads -> VThreads: Join all vehicle threads
+        end
+    end
+    
+    par Station Update (parallel within each flow)
+        TFThreads ->> SThreads: Create Station threads\n(one per station in flow)
+        
+        loop each station
+            SThreads -> SThreads: Station::Update()
+            
+            alt In ChargingStation::Update()
+                SThreads -> SThreads: Lock queueMutex_
+                SThreads -> SThreads: PopFromQueue()
+                
+                opt if queue not empty
+                    SThreads -> SThreads: Get first EV from queue
+                    SThreads -> SThreads: Set EV->SOC = 1.0
+                    SThreads -> SThreads: chargeCount_++
+                    SThreads -> SThreads: Calculate energy delivered\n(capacity × SOC)
+                    SThreads -> SThreads: totalCharged_ += energy
+                end
+                
+                SThreads -> SThreads: Unlock queueMutex_
+            end
+        end
+        
+        par Wait for all station threads to complete
+            SThreads -> SThreads: Join all station threads
+        end
+    end
+end
+
+== Back to Main Thread ==
+Main <- TFThreads: All TrafficFlow threads complete
+Main -> Main: PrintStatus()
+Main -> Main: Report queue lengths &\ncharging statistics
+
+@enduml
