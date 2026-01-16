@@ -29,55 +29,23 @@ par TrafficFlow Threads Execute (parallel)
         loop each vehicle
             VThreads -> VThreads: Vehicle::Move(distance_km)
             
-            alt Action Phase
-                VThreads -> VThreads: EV::Action(distance_km)
-                
-                alt Check SOC & Stations
-                    opt if SOC < 20% & not atStation
-                        VThreads -> VThreads: Find upcoming charging station\nwithin travel distance
-                        
-                        alt Station in range
-                            VThreads -> VThreads: Set position to station
-                            VThreads -> VThreads: Set atStation = true
-                            VThreads -> VThreads: Get shared_ptr(self)
-                            
-                            Note over VThreads: Call station->HandleArrival()\nfrom different thread
-                            VThreads ->> SThreads: Trigger station logic
-                            
-                            alt In ChargingStation::HandleArrival()
-                                SThreads -> SThreads: dynamic_cast to EV
-                                SThreads -> SThreads: AddToQueue(ev_ptr)
-                                
-                                Note over SThreads: Thread-safe queue update\nwith mutex lock
-                                SThreads -> SThreads: Lock queueMutex_
-                                SThreads -> SThreads: evQueue_.push(ev)
-                                SThreads -> SThreads: Update maxQueueLength_
-                                SThreads -> SThreads: Unlock queueMutex_
-                            end
-                            
-                            VThreads -> VThreads: Return false (can't move)
-                        else Station not in range
-                            VThreads -> VThreads: Return true (continue moving)
-                        end
-                    end
-                    
-                    opt if atStation & SOC >= 90%
-                        VThreads -> VThreads: Set atStation = false
-                        VThreads -> VThreads: Return true (leave station)
-                    else if atStation & SOC < 90%
-                        VThreads -> VThreads: Return false (wait for charging)
-                    end
+            alt EV::Action() checks
+                opt if SOC < 20%, find charging station
+                    VThreads ->> SThreads: station->HandleArrival()
+                    Note over SThreads: Mutex locks queue
+                    SThreads -> SThreads: Add EV to queue
+                    VThreads -> VThreads: Return false (stop movement)
+                else if atStation & SOC < 90%
+                    VThreads -> VThreads: Return false (wait for charge)
+                else if atStation & SOC >= 90%
+                    VThreads -> VThreads: Return true (leave station)
+                else
+                    VThreads -> VThreads: Return true (continue)
                 end
             end
             
             alt If allowed to move
-                VThreads -> VThreads: Update position_km
-                VThreads -> VThreads: Decrease SOC based on\nconsumption model
-                
-                opt if position >= destination
-                    VThreads -> VThreads: Reset position to 0
-                    VThreads -> VThreads: Randomize SOC
-                end
+                VThreads -> VThreads: Update position & SOC
             end
         end
         
@@ -91,20 +59,11 @@ par TrafficFlow Threads Execute (parallel)
         
         loop each station
             SThreads -> SThreads: Station::Update()
+            Note over SThreads: Mutex locks queue
             
-            alt In ChargingStation::Update()
-                SThreads -> SThreads: Lock queueMutex_
-                SThreads -> SThreads: PopFromQueue()
-                
-                opt if queue not empty
-                    SThreads -> SThreads: Get first EV from queue
-                    SThreads -> SThreads: Set EV->SOC = 1.0
-                    SThreads -> SThreads: chargeCount_++
-                    SThreads -> SThreads: Calculate energy delivered\n(capacity × SOC)
-                    SThreads -> SThreads: totalCharged_ += energy
-                end
-                
-                SThreads -> SThreads: Unlock queueMutex_
+            opt if EV in queue
+                SThreads -> SThreads: Charge EV to 100%
+                SThreads -> SThreads: Update statistics
             end
         end
         
