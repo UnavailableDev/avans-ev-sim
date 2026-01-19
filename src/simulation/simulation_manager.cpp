@@ -131,13 +131,13 @@ void SimulationManager::PrintStatus() {
       if (chargingStation) {
         std::cout << "  - Station Name: " << chargingStation->GetName() 
                   << "\n\tTotal Charges: " << chargingStation->GetChargeCount() 
-                  << ", Total Time: " << chargingStation->GetChargeCount() * 12 << " minutes\n"
+                  << ", Total Time: " << chargingStation->GetChargeCount() * simulationStepMinutes_ << " minutes\n"
                   << "\tTotal Energy Delivered: " << chargingStation->GetTotalCharged() << " kWh\n"
                   << "\tMax Queue Length: " << chargingStation->GetMaxQueueLength() 
                   << std::endl
-                  // << ", Max Queue Time: " << chargingStation->GetMaxQueueLength() * 12 << " minutes\n"
+                  // << ", Max Queue Time: " << chargingStation->GetMaxQueueLength() * simulationStepMinutes_ << " minutes\n"
                   << "\tCurrent Queue Length: " << chargingStation->GetQueueLength()
-                  << ", Current Queue Time: " << chargingStation->GetQueueLength() * 12 << " minutes\n";
+                  << ", Current Queue Time: " << chargingStation->GetQueueLength() * simulationStepMinutes_ << " minutes\n";
       }
     }
   }

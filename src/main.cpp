@@ -23,7 +23,7 @@ int main() {
 
   while (1) {
     simulation::SimulationManager sim_manager(percentage);
-    sim_manager.StepSimulation(120);
+    sim_manager.StepSimulation(12);
 
     std::cout << "re-run? y/N: ";
     std::getline(std::cin, input);
